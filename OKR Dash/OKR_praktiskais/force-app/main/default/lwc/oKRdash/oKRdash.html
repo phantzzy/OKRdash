@@ -1,0 +1,553 @@
+<template>
+    <lightning-card title="OKR Dashboard" icon-name="standard:goals">
+      <div class="slds-m-around_medium">
+        <lightning-layout>
+          <lightning-layout-item flexibility="auto">
+            <lightning-combobox label="Select Year" value={selectedYear} options={yearOptions} onchange={handleYearChange}></lightning-combobox>
+          </lightning-layout-item>
+          <lightning-layout-item flexibility="auto">
+            <lightning-combobox label="Select User" value={selectedUser} options={userOptions} onchange={handleUserChange}></lightning-combobox>
+          </lightning-layout-item>
+        </lightning-layout>
+      </div>
+
+      <lightning-layout-item flexibility="auto">
+
+ <!-- Dropdown to select which record creation modal to open --> 
+
+      <lightning-combobox 
+      class="dropdown-create" 
+      style="width: fit-content;"
+      placeholder="Create Record" 
+      options={recordOptions} 
+      onchange={handleRecordSelection}>
+  </lightning-combobox>
+
+
+        <!-- Dropdown to select which target creation modal to open --> 
+
+        <lightning-combobox 
+        class="dropdown-create" 
+        style="width: fit-content;"
+        placeholder="Create Goal" 
+        options={modalOptions} 
+        onchange={handleModalSelection}>
+      
+      </lightning-combobox>
+    </lightning-layout-item>
+
+      
+      <div class="slds-grid slds-wrap slds-gutters slds-m-around_medium">
+
+        <!-- Loop through objectives -->
+
+        <template for:each={objectives} for:item="objective">
+
+            <!-- Each Objective has its own row -->
+
+            <div key={objective.Id} class="slds-grid slds-gutters slds-wrap slds-m-bottom_small slds-size_1-of-1">
+                
+                <!-- Objective Name -->
+                 
+                <div class="slds-col slds-size_1-of-12 slds-p-horizontal_small">
+                    <p class="slds-wrap" style="font-weight: bold; font-size: 24px; text-align: center;">{objective.Name}</p>
+                    <p>Status: {objective.Status__c}</p>
+                </div>
+  
+                <div style="padding-left: 150px" class="slds-col slds-size_11-of-12 slds-grid slds-wrap slds-gutters">
+                    <!-- Ensure Key Results exist before rendering -->
+                    <template if:true={objective.Key_Results__r}>
+                        <template for:each={objective.Key_Results__r} for:item="keyResult">
+
+                            <div key={keyResult.Id} class="slds-box slds-m-around_x-small slds-size_1-of-3" style="width: 200px">
+                                <p style="font-weight: bold; font-size: 16px; text-align: center; padding:10px; border-bottom: 2px solid rgb(165, 165, 165);">{keyResult.Name}</p>
+    
+                               <!-- Code to display targets -->
+                               
+                                <!-- Display Reviews -->
+                                 
+                                <template if:true={keyResult.Reviews__r}>
+                                    <div>
+                                        <template for:each={keyResult.Reviews__r} for:item="review">
+                                            <p style="padding-top:10px;" key={review.Id}>
+                                                <span>{review.Type__c}: </span> <span style="color: darkgray;">{review.Completed_Target__c}/{review.Target__c}</span>
+                                            </p>
+                                        </template>
+                                    </div>
+                                </template>
+    
+                                <!-- Display Surveys -->
+
+                                <template if:true={keyResult.Surveys__r}>
+                                    <div>
+                                        <template for:each={keyResult.Surveys__r} for:item="survey">
+                                            <p style="padding-top:10px;" key={survey.Id}>
+                                                <span>{survey.Type__c}: </span> <span style="color: darkgray;">{survey.Completed_Target__c}/{survey.Target__c}</span>
+                                            </p>
+                                        </template>
+                                    </div>
+                                </template>
+
+                                <!-- Display Google Reviews -->
+    
+                                <template if:true={keyResult.Google_Reviews__r}>
+                                    <div>
+                                        <template for:each={keyResult.Google_Reviews__r} for:item="googleReview">
+                                            <p style="padding-top:10px;" key={googleReview.Id}>
+                                                <span>{googleReview.Type__c}: </span> <span style="color: darkgray;">{googleReview.Completed_Target__c}/{googleReview.Target__c}</span>
+                                            </p>
+                                        </template>
+                                    </div>
+                                </template>
+    
+                                  <!-- Display Case Studies -->
+
+                                <template if:true={keyResult.Case_Studies__r}>
+                                    <div>
+                                        <template for:each={keyResult.Case_Studies__r} for:item="caseStudy">
+                                            <p style="padding-top:10px;" key={caseStudy.Id}>
+                                                <span>{caseStudy.Type__c}: </span> <span style="color: darkgray;">{caseStudy.Completed_Target__c}/{caseStudy.Target__c}</span>
+                                            </p>
+                                        </template>
+                                    </div>
+                                </template>
+
+                                <!-- Display Events -->
+    
+                                <template if:true={keyResult.CustomEvents__r}>
+                                    <div>
+                                        <template for:each={keyResult.CustomEvents__r} for:item="customEvent">
+                                            <p style="padding-top:10px;" key={customEvent.Id}>
+                                                <span>{customEvent.Type__c}: </span> <span style="color: darkgray;">{customEvent.Completed_Target__c}/{customEvent.Target__c}</span>
+                                            </p>
+                                        </template>
+                                    </div>
+                                </template>
+
+                                <!-- Display Calls -->
+    
+                                <template if:true={keyResult.Calls__r}>
+                                    <div>
+                                        <template for:each={keyResult.Calls__r} for:item="calls">
+                                            <p style="padding-top:10px;" key={calls.Id}>
+                                                <span>{calls.Type__c}: </span> <span style="color: darkgray;">{calls.Completed_Target__c}/{calls.Target__c}</span>
+                                            </p>
+                                        </template>
+                                    </div>
+                                </template>
+
+                                <!-- Display Opportunities -->
+    
+                                <template if:true={keyResult.CustomOpportunities__r}>
+                                    <div>
+                                        <template for:each={keyResult.CustomOpportunities__r} for:item="customOpportunity">
+                                            <p style="padding-top:10px;" key={customOpportunity.Id}>
+                                                <span>{customOpportunity.Type__c}: </span> <span style="color: darkgray;">{customOpportunity.Completed_Target__c}/{customOpportunity.Target__c}</span>
+                                            </p>
+                                        </template>
+                                    </div>
+                                </template>
+
+                                <!-- Display Contracts -->
+    
+                                <template if:true={keyResult.CustomContracts__r}>
+                                    <div>
+                                        <template for:each={keyResult.CustomContracts__r} for:item="customContract">
+                                            <p style="padding-top:10px;" key={customContract.Id}>
+                                                <span>{customContract.Type__c}: </span> <span style="color: darkgray;">{customContract.Completed_Target__c}/{customContract.Target__c}</span>
+                                            </p>
+                                        </template>
+                                    </div>
+                                </template>
+
+                                <!-- Display Leads -->
+    
+                                <template if:true={keyResult.CustomLeads__r}>
+                                    <div>
+                                        <template for:each={keyResult.CustomLeads__r} for:item="customLead">
+                                            <p style="padding-top:10px;" key={customLead.Id}>
+                                                <span>{customLead.Type__c}: </span> <span style="color: darkgray;">{customLead.Completed_Target__c}/{customLead.Target__c}</span>
+                                            </p>
+                                        </template>
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
+                    </template>
+                </div>
+            </div>
+        </template>
+    
+        <!-- No Objectives Message -->
+
+        <template if:true={noObjectives}>
+            <div class="slds-col slds-size_1-of-1 slds-var-p-around_medium">
+                <p>No objectives found for the selected year and user.</p>
+            </div>
+        </template>
+    </div>
+    
+    </lightning-card>
+
+    <!-- Modals for Creating New Records and Targets-->
+
+    <!-- New Objective -->
+     
+    <template if:true={showNewObjectiveModal}>
+      <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+          <header class="slds-modal__header">
+            <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close New Objective Modal" aria-label="Close New Objective Modal" onclick={handleCloseNewObjectiveModal}>
+              <lightning-icon icon-name="utility:close" alternative-text="Close" size="small"></lightning-icon>
+              <span class="slds-assistive-text">Close</span>
+            </button>
+            <h2 class="slds-text-heading_medium">New Objective</h2>
+          </header>
+          <div class="slds-modal__content slds-p-around_medium">
+            <lightning-record-edit-form object-api-name="Objective__c" onsuccess={handleSuccess} onerror={handleError}>
+              <lightning-messages></lightning-messages>
+              <lightning-input-field field-name="Name"></lightning-input-field>
+
+    <!-- Year Selection -->
+
+                  <lightning-combobox
+                  label="Select Year"
+                  value={selectedYear}
+                  placeholder="Select Year"
+                  options={yearOptions}
+                  onchange={handleYearChange}>
+                  </lightning-combobox>
+
+    <!-- Hidden Date Field -->
+
+                  <lightning-input-field field-name="Objective_Year__c" value={selectedYearFormatted} class="slds-hide"></lightning-input-field>
+    
+
+              <lightning-input-field field-name="Assigned_User__c"></lightning-input-field>
+              <lightning-input-field field-name="Status__c"></lightning-input-field>
+              <lightning-button class="slds-m-top_medium" type="submit" label="Save"></lightning-button>
+            </lightning-record-edit-form>
+          </div>
+        </div>
+      </section>
+      <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+    <!-- New Key Result -->
+     
+    <template if:true={showNewKeyResultModal}>
+      <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+          <header class="slds-modal__header">
+            <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close New Key Result Modal" aria-label="Close New Key Result Modal" onclick={handleCloseNewKeyResultModal}>
+              <lightning-icon icon-name="utility:close" alternative-text="Close" size="small"></lightning-icon>
+              <span class="slds-assistive-text">Close</span>
+            </button>
+            <h2 class="slds-text-heading_medium">New Key Result</h2>
+          </header>
+          <div class="slds-modal__content slds-p-around_medium slds-scrollable_y">
+            <lightning-record-edit-form object-api-name="Key_Result__c" onsuccess={handleSuccess} onerror={handleError}>
+              <lightning-messages></lightning-messages>
+              <lightning-input-field field-name="Name"></lightning-input-field>
+              <lightning-input-field field-name="Objective__c"></lightning-input-field>
+              <lightning-input-field field-name="Objective_Year__c" value={selectedYear}></lightning-input-field>
+              <lightning-button class="slds-m-top_medium" type="submit" label="Save" onclick={handleSaveKeyResult}></lightning-button>
+            </lightning-record-edit-form>
+          </div>
+        </div>
+      </section>
+      <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+    <!-- New Review -->
+
+    <template if:true={showNewReviewModal}>
+      <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+          <header class="slds-modal__header">
+            <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close New Review Modal" aria-label="Close New Review Modal" onclick={handleCloseNewReviewModal}>
+              <lightning-icon icon-name="utility:close" alternative-text="Close" size="small"></lightning-icon>
+              <span class="slds-assistive-text">Close</span>
+            </button>
+            <h2 class="slds-text-heading_medium">New Review</h2>
+          </header>
+          <div class="slds-modal__content slds-p-around_medium">
+            <lightning-record-edit-form object-api-name="Review__c" onsuccess={handleSuccess} onerror={handleError}>
+              <lightning-messages></lightning-messages>
+              <lightning-input-field field-name="Name" required></lightning-input-field>
+             
+              <!--  <lightning-input-field field-name="Type__c" value={reviewType} onchange={handleReviewTypeChange}></lightning-input-field> -->
+              
+              <lightning-input-field field-name="Target__c" required="true"></lightning-input-field>
+              <lightning-input-field field-name="Key_Result__c"></lightning-input-field>
+              <lightning-button class="slds-m-top_medium" type="submit" label="Save"></lightning-button>
+            </lightning-record-edit-form>
+          </div>
+        </div>
+      </section>
+      <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+    <!-- New Survey -->
+
+    <template if:true={showNewSurveyModal}>
+      <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+          <header class="slds-modal__header">
+            <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close New Survey Modal" aria-label="Close New Survey Modal" onclick={handleCloseNewSurveyModal}>
+              <lightning-icon icon-name="utility:close" alternative-text="Close" size="small"></lightning-icon>
+              <span class="slds-assistive-text">Close</span>
+            </button>
+            <h2 class="slds-text-heading_medium">New Survey</h2>
+          </header>
+          <div class="slds-modal__content slds-p-around_medium">
+            <lightning-record-edit-form object-api-name="Survey__c" onsuccess={handleSuccess} onerror={handleError}>
+              <lightning-messages></lightning-messages>
+              <lightning-input-field field-name="Name" required></lightning-input-field>
+
+             <!-- <lightning-input-field field-name="Type__c" value={surveyType} onchange={handleSurveyTypeChange}></lightning-input-field> -->
+              
+             <lightning-input-field field-name="Target__c" required="true"></lightning-input-field>
+              <lightning-input-field field-name="Key_Result__c"></lightning-input-field>
+              <lightning-button class="slds-m-top_medium" type="submit" label="Save"></lightning-button>
+            </lightning-record-edit-form>
+          </div>
+        </div>
+      </section>
+      <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+    <!-- New Google Review -->
+
+    <template if:true={showNewGoogleReviewModal}>
+      <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+          <header class="slds-modal__header">
+            <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close New Google Review Modal" aria-label="Close New Google Review Modal" onclick={handleCloseNewGoogleReviewModal}>
+              <lightning-icon icon-name="utility:close" alternative-text="Close" size="small"></lightning-icon>
+              <span class="slds-assistive-text">Close</span>
+            </button>
+            <h2 class="slds-text-heading_medium">New Google Review</h2>
+          </header>
+          <div class="slds-modal__content slds-p-around_medium">
+            <lightning-record-edit-form object-api-name="Google_Review__c" onsuccess={handleSuccess} onerror={handleError}>
+              <lightning-messages></lightning-messages>
+              <lightning-input-field field-name="Name" required></lightning-input-field>
+
+              <!-- <lightning-input-field field-name="Type__c" value={googleReviewType} onchange={handleGoogleReviewTypeChange}></lightning-input-field> -->
+              
+              <lightning-input-field field-name="Target__c" required></lightning-input-field>
+              <lightning-input-field field-name="Key_Result__c"></lightning-input-field>
+              <lightning-button class="slds-m-top_medium" type="submit" label="Save"></lightning-button>
+            </lightning-record-edit-form>
+          </div>
+        </div>
+      </section>
+      <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+    <!-- New Case Study -->
+
+    <template if:true={showNewCaseStudyModal}>
+      <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+          <header class="slds-modal__header">
+            <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close New Case Study Modal" aria-label="Close New Case Study Modal" onclick={handleCloseNewCaseStudyModal}>
+              <lightning-icon icon-name="utility:close" alternative-text="Close" size="small"></lightning-icon>
+              <span class="slds-assistive-text">Close</span>
+            </button>
+            <h2 class="slds-text-heading_medium">New Case Study</h2>
+          </header>
+          <div class="slds-modal__content slds-p-around_medium">
+            <lightning-record-edit-form object-api-name="Case_Study__c" onsuccess={handleSuccess} onerror={handleError}>
+              <lightning-messages></lightning-messages>
+              <lightning-input-field field-name="Name" required></lightning-input-field>
+              
+              <!-- <lightning-input-field field-name="Type__c" value={caseStudyType} onchange={handleCaseStudyTypeChange}></lightning-input-field> -->
+              
+              <lightning-input-field field-name="Target__c" required="true"></lightning-input-field>
+              <lightning-input-field field-name="Key_Result__c"></lightning-input-field>
+              <lightning-button class="slds-m-top_medium" type="submit" label="Save"></lightning-button>
+            </lightning-record-edit-form>
+          </div>
+        </div>
+      </section>
+      <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+    <!-- New Call Target -->
+
+<template if:true={showNewCallModal}>
+  <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+    <div class="slds-modal__container">
+      <header class="slds-modal__header">
+        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close New Call Modal" aria-label="Close New Call Modal" onclick={handleCloseNewCallModal}>
+          <lightning-icon icon-name="utility:close" alternative-text="Close" size="small"></lightning-icon>
+          <span class="slds-assistive-text">Close</span>
+        </button>
+        <h2 class="slds-text-heading_medium">New Call Target</h2>
+      </header>
+      <div class="slds-modal__content slds-p-around_medium">
+        <lightning-record-edit-form object-api-name="Call__c" onsuccess={handleCallSuccess} onerror={handleError}>
+          <lightning-messages></lightning-messages>
+          <lightning-input-field field-name="Name" required></lightning-input-field>
+          <lightning-input-field field-name="Type__c" value={callType} onchange={handleCallTypeChange}></lightning-input-field>
+          <lightning-input-field field-name="Target__c" required></lightning-input-field>
+          <lightning-input-field field-name="Key_Result__c"></lightning-input-field>
+          <lightning-button class="slds-m-top_medium" type="submit" label="Save"></lightning-button>
+        </lightning-record-edit-form>
+      </div>
+    </div>
+  </section>
+  <div class="slds-backdrop slds-backdrop_open"></div>
+</template>
+
+
+    <!-- New Lead -->
+
+    <template if:true={showNewLeadModal}>
+      <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+          <header class="slds-modal__header">
+            <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close New Lead Modal" aria-label="Close New Lead Modal" onclick={handleCloseNewLeadModal}>
+              <lightning-icon icon-name="utility:close" alternative-text="Close" size="small"></lightning-icon>
+              <span class="slds-assistive-text">Close</span>
+            </button>
+            <h2 class="slds-text-heading_medium">New Lead</h2>
+          </header>
+          <div class="slds-modal__content slds-p-around_medium">
+            <lightning-record-edit-form object-api-name="CustomLead__c" onsuccess={handleSuccess} onerror={handleError}>
+              <lightning-messages></lightning-messages>
+              <lightning-input-field field-name="Name" required></lightning-input-field>
+              <lightning-input-field field-name="Type__c" value={selectedLeadType} onchange={handleLeadTypeChange}></lightning-input-field>
+              <lightning-input-field field-name="Target__c" required></lightning-input-field>
+              <lightning-input-field field-name="Key_Result__c"></lightning-input-field>
+              <lightning-button class="slds-m-top_medium" type="submit" label="Save"></lightning-button>
+            </lightning-record-edit-form>
+          </div>
+          <footer class="slds-modal__footer">
+            <lightning-button variant="neutral" label="Cancel" onclick={handleCloseNewLeadModal}></lightning-button>
+          </footer>
+        </div>
+      </section>
+      <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+    <!-- New Event -->
+
+    <template if:true={showNewCustomEventModal}>
+      <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+          <header class="slds-modal__header">
+            <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close New Event Modal" aria-label="Close New Event Modal" onclick={handleCloseNewCustomEventModal}>
+              <lightning-icon icon-name="utility:close" alternative-text="Close" size="small"></lightning-icon>
+              <span class="slds-assistive-text">Close</span>
+            </button>
+            <h2 class="slds-text-heading_medium">New Event</h2>
+          </header>
+          <div class="slds-modal__content slds-p-around_medium">
+            <lightning-record-edit-form object-api-name="CustomEvent__c" onsuccess={handleSuccess} onerror={handleError}>
+              <lightning-messages></lightning-messages>
+              <lightning-input-field field-name="Name" required></lightning-input-field>
+              <lightning-input-field field-name="Type__c" value={customEventType} onchange={handleCustomEventTypeChange}></lightning-input-field>
+              <lightning-input-field field-name="Target__c" required="true"></lightning-input-field>
+              <lightning-input-field field-name="Key_Result__c"></lightning-input-field>
+              <lightning-button class="slds-m-top_medium" type="submit" label="Save"></lightning-button>
+            </lightning-record-edit-form>
+          </div>
+        </div>
+      </section>
+      <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+    <!-- New Contract -->
+
+    <template if:true={showNewContractModal}>
+      <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+          <header class="slds-modal__header">
+            <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close New Contract Modal" aria-label="Close New Contract Modal" onclick={handleCloseNewContractModal}>
+              <lightning-icon icon-name="utility:close" alternative-text="Close" size="small"></lightning-icon>
+              <span class="slds-assistive-text">Close</span>
+            </button>
+            <h2 class="slds-text-heading_medium">New Contract</h2>
+          </header>
+          <div class="slds-modal__content slds-p-around_medium">
+            <lightning-record-edit-form object-api-name="CustomContract__c" onsuccess={handleSuccess} onerror={handleError}>
+              <lightning-messages></lightning-messages>
+              <lightning-input-field field-name="Name" required></lightning-input-field>
+              <lightning-input-field field-name="Type__c" value={contractType} onchange={handleContractTypeChange}></lightning-input-field>
+              <lightning-input-field field-name="Target__c" required="true"></lightning-input-field>
+              <lightning-input-field field-name="Key_Result__c"></lightning-input-field>
+              <lightning-button class="slds-m-top_medium" type="submit" label="Save"></lightning-button>
+            </lightning-record-edit-form>
+          </div>
+        </div>
+      </section>
+      <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+    <!-- New Opportunity -->
+
+    <template if:true={showNewOpportunityModal}>
+      <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+          <header class="slds-modal__header">
+            <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close New Opportunity Modal" aria-label="Close New Opportunity Modal" onclick={handleCloseNewOpportunityModal}>
+              <lightning-icon icon-name="utility:close" alternative-text="Close" size="small"></lightning-icon>
+              <span class="slds-assistive-text">Close</span>
+            </button>
+            <h2 class="slds-text-heading_medium">New Opportunity</h2>
+          </header>
+          <div class="slds-modal__content slds-p-around_medium">
+            <lightning-record-edit-form object-api-name="CustomOpportunity__c" onsuccess={handleSuccess} onerror={handleError}>
+              <lightning-messages></lightning-messages>
+              <lightning-input-field field-name="Name" required></lightning-input-field>
+
+              <!-- <lightning-input-field field-name="Type__c" value={selectedOpportunityType} onchange={handleOpportunityTypeChange}></lightning-input-field> --> 
+             
+              <lightning-input-field field-name="Target__c" required></lightning-input-field>
+              <lightning-input-field field-name="Key_Result__c" required></lightning-input-field>
+              <lightning-button class="slds-m-top_medium" type="submit" label="Save"></lightning-button>
+            </lightning-record-edit-form>
+          </div>
+          
+        </div>
+      </section>
+      <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+    <!-- Modal for Creating Survey Record -->
+
+    <template if:true={showNewSurveyRecordModal}>
+      <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+          <div class="slds-modal__container">
+              <header class="slds-modal__header">
+                  <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close New Survey Record Modal" aria-label="Close New Survey Record Modal" onclick={handleCloseModal}>
+                      <lightning-icon icon-name="utility:close" alternative-text="Close" size="small"></lightning-icon>
+                      <span class="slds-assistive-text">Close</span>
+                  </button>
+                  <h2 class="slds-text-heading_medium">New Survey Record</h2>
+              </header>
+              <div class="slds-modal__content slds-p-around_medium">
+                  <lightning-record-edit-form object-api-name="SurveyRecord__c" onsuccess={handleSuccess} onerror={handleError}>
+                      <lightning-messages></lightning-messages>
+                      <lightning-input-field field-name="Name" required></lightning-input-field>
+
+                      <!-- <lightning-input-field field-name="Type__c" required></lightning-input-field> -->
+
+                      <lightning-input-field field-name="Key_Result__c"></lightning-input-field>
+                      <lightning-button class="slds-m-top_medium" type="submit" label="Save"></lightning-button>
+                  </lightning-record-edit-form>
+              </div>
+              <footer class="slds-modal__footer">
+                  <lightning-button variant="neutral" label="Cancel" onclick={handleCloseModal}></lightning-button>
+              </footer>
+          </div>
+      </section>
+      <div class="slds-backdrop slds-backdrop_open"></div>
+  </template>
+
+
+    
+  </template>

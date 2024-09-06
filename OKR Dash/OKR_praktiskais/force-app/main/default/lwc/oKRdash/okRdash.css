@@ -1,0 +1,6 @@
+.slds-box {
+    padding: var(--lwc-spacingMedium, 1rem);
+    border-radius: var(--lwc-borderRadiusMedium, 0.25rem);
+    margin: 20px;
+    border: var(--lwc-borderWidthThin, 1px) solid var(--slds-g-color-border-base-1, var(--lwc-colorBorder, rgb(229, 229, 229)));
+}
